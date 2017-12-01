@@ -33,17 +33,17 @@ def CompanyMng():
         print(' %s . %s\r\n' % (company, companylist[company]['Name']))
     print('\r\n %s . %s' % ('0', zhCN('返回上一层菜单')))
     print(' %s . %s' % ('+', zhCN('录入公司信息')))
-    company_id = raw_input(zhCN('\r\n请输入公司ID:'))
+    company_id = my_input(zhCN('\r\n请输入公司ID:'))
     if company_id == '0':
         pass
     elif company_id == '+':
         data = {}
-        data['Name'] = zhCN_INPUT(raw_input(zhCN('公司名称: ')))
-        data['Address'] = zhCN_INPUT(raw_input(zhCN('地    址: ')))
-        data['Tel'] = zhCN_INPUT(raw_input(zhCN('电    话: ')))
-        data['BankName'] = zhCN_INPUT(raw_input(zhCN('银    行: ')))
-        data['BankNo'] = zhCN_INPUT(raw_input(zhCN('银行帐号: ')))
-        data['TaxID'] = zhCN_INPUT(raw_input(zhCN('税    号: ')))
+        data['Name'] = zhCN_INPUT(my_input(zhCN('公司名称: ')))
+        data['Address'] = zhCN_INPUT(my_input(zhCN('地    址: ')))
+        data['Tel'] = zhCN_INPUT(my_input(zhCN('电    话: ')))
+        data['BankName'] = zhCN_INPUT(my_input(zhCN('银    行: ')))
+        data['BankNo'] = zhCN_INPUT(my_input(zhCN('银行帐号: ')))
+        data['TaxID'] = zhCN_INPUT(my_input(zhCN('税    号: ')))
         mydb.insert(data, 'company')
         print(zhCN('\r\n\r\n录入成功 - %s' % data['Name']))
     else:
@@ -57,7 +57,7 @@ def CompanyMng():
         print(zhCN('税    号: %s' % company['TaxID']))
         print(zhCN('\r\n修改 - 输入 e \r\n删除 - 输入 d \r\n返回 - 输入 0'))
 
-        command = raw_input(zhCN('\r\n指令:'))
+        command = my_input(zhCN('\r\n指令:'))
         if command == 'd':
             print(zhCN('\r\n\r\n删除成功 - %s' % company['Name']))
             mydb.delete(company['ID'], 'company')
@@ -68,8 +68,14 @@ def CompanyMng():
             for feild in datainfo[1:]:
                 print(zhCN('  %d . %s' % (i, company[feild])))
                 i += 1
-            feild_id = input(zhCN('\r\n要修改的内容编号:'))
-            company[datainfo[feild_id]] = zhCN_INPUT(raw_input(zhCN('新的内容: ')))
+
+            while True:
+                feild_id = my_input(zhCN('\r\n请输入要修改的内容编号:'))
+                if feild_id.isdigit() and int(feild_id) <= len(datainfo):
+                    feild_id = int(feild_id)
+                    break
+
+            company[datainfo[feild_id]] = zhCN_INPUT(my_input(zhCN('新的内容: ')))
             mydb.update(company, 'company')
             print(zhCN('\r\n\r\n修改成功 - %s' % company['Name']))
 
@@ -84,7 +90,9 @@ def zhCN(sss):
 
 
 def zhCN_INPUT(sss):
-    return sss.decode('gb2312')
+    if PY2:
+        sss = sss.decode('gb2312')
+    return sss
 
 
 def help():
@@ -117,7 +125,7 @@ if __name__ == '__main__':
     while (True):
         command = input(zhCN('\r\n请输入要选择的功能(序号):'))
 
-        if command.isalnum() and int(command) <= len(menu):
+        if command.isdigit() and int(command) <= len(menu):
             menu[int(command)][1]()
         elif command == 'exit':
             exit()

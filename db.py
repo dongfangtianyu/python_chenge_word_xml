@@ -103,7 +103,7 @@ class db(object):
                     self._data['CompanyByName'][x['Name']] = x
                 break
 
-            return self._data[table][id]
+        return self._data[table][id]
 
     def get_company_by_name(self, name=None):
         table = 'company'

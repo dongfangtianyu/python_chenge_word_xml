@@ -90,7 +90,6 @@ class contents(object):
                 doc_xml = f.read()
             doc_xml = self.replece_key(doc_xml, PI_data[key])
 
-            import ipdb;ipdb.set_trace()
             out_file_name = os.path.join(self.home_dir, 'out', PI_data[key]['PINo'] + '.xml')
             with open(out_file_name, 'w', encoding='utf-8') as f:
                 f.write(doc_xml)
